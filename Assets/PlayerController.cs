@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
@@ -16,7 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int jumpForce;
     [SerializeField] float jumpMultiplier;
     [SerializeField] float fallMultiplier;
-    
+    [SerializeField] float coyoteTime;
+    [SerializeField] float jumpBufferTime;
+
     [Header("Dash Parameters")]
     [SerializeField] float dashTime;
     [SerializeField] int dashForce;
@@ -24,7 +28,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject dashChargeParticle;
     [SerializeField] private GameObject dashDirArrow;
     [SerializeField] private float trailDashValue;
-    
+
     [Header("GroundCheck Parameters")]
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundLayer;
@@ -34,6 +38,8 @@ public class PlayerController : MonoBehaviour
     
     private bool _isJumping;
     private float _jumpCounter;
+    private float _coyoteCounter;
+    private float _jumpBufferCounter;
     private bool _isDashCharging;
     private float _dashCounter;
     private bool _hasDashed;
@@ -48,8 +54,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 _baseGravity;
     private Vector2 _vecGravity;
 
+    private bool passOne; //utilisé pour ne faire qu'une fois les anims d'attérissages
+
     public delegate void PlayerDel();
-    public PlayerDel CharaDeath;
+    private PlayerDel _charaDeath;
         
 
     // Start is called before the first frame update
@@ -62,12 +70,23 @@ public class PlayerController : MonoBehaviour
         _trailRenderer = transform.GetComponentInChildren<TrailRenderer>();
         _trailNormalValue = _trailRenderer.time;
         
-        CharaDeath += Death;
+        _charaDeath += Death;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(IsGrounded())
+        {
+            _coyoteCounter = coyoteTime;
+        }
+        else
+        {
+            _coyoteCounter -= Time.deltaTime;
+        }
+
+        _jumpBufferCounter -= Time.deltaTime;
+
         if(_rb.velocity.y <= 0 && IsGrounded())
             _hasDashed = false;
         if (_rb.velocity.y <= 0)
@@ -118,7 +137,15 @@ public class PlayerController : MonoBehaviour
             else
             {
                 //Jump
-                if (_rb.velocity.y > 0 && _isJumping)
+                if(_coyoteCounter>0 && _jumpBufferCounter>0)
+                {
+                    _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+                    _isJumping = true;
+                    
+                    _jumpCounter = 0;
+                    _jumpBufferCounter = 0;
+                }
+                if(_rb.velocity.y > 0 && _isJumping)
                 {
                     _jumpCounter += Time.deltaTime;
                     if (_jumpCounter > jumpTime) _isJumping = false;
@@ -159,22 +186,18 @@ public class PlayerController : MonoBehaviour
         _move = value.Get<Vector2>();
     }
 
-    void OnJump()
+    void OnJump() //fonction lancé 2 fois, à l'appuie et quand on lache le bouton de saut
     {
         _jumpButtonState = !_jumpButtonState;
-        if (_jumpButtonState)
+        if (_jumpButtonState) //quand Appuie sur le bouton
         {
-            if(IsGrounded())
-            {
-                _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-                _isJumping = true;
-                _jumpCounter = 0;
-            }
+            _jumpBufferCounter = jumpBufferTime;
         }
-        else if(!_jumpButtonState)
+        else if(!_jumpButtonState) //quand relache le bouton
         {
             _isJumping = false;
-
+            
+            _coyoteCounter = 0;
             _jumpCounter = 0;
             
             if (_rb.velocity.y>0)
@@ -184,7 +207,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    void OnDash()
+    void OnDash() //fonction lancé 2 fois, à l'appuie et quand on lache le bouton de Dash
     {
         _dashButtonState= !_dashButtonState;
         if(_dashButtonState)
@@ -200,21 +223,47 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnReset()
+    {
+        Debug.Log("Reset");
+        ReloadScene();
+    }
+
     bool IsGrounded()
     {
-        return Physics2D.OverlapCapsule(groundCheck.position, new Vector2(1f, 0.15f), CapsuleDirection2D.Horizontal,0,groundLayer);
+        bool ret = Physics2D.OverlapCapsule(groundCheck.position, new Vector2(1f, 0.15f), CapsuleDirection2D.Horizontal,
+            0, groundLayer);
+        if(ret)
+        {
+            if(passOne)
+            {
+                passOne = false;
+                //DoTween Squash here glhf
+            }
+        }
+        else
+        {
+            passOne = true;
+        }
+        return ret;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.CompareTag("DeathZone"))
         {
-            CharaDeath();
+            _charaDeath();
         }
     }
 
     private void Death()
     {
         Debug.Log("Ah il est oh sol!");
+        ReloadScene();
+    }
+
+    private void ReloadScene()
+    {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 }
