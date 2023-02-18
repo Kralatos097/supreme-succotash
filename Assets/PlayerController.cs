@@ -10,6 +10,7 @@ using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("--------------------------------------------------------")]
     [Header("Move Parameters")]
     [SerializeField] float speed;
     
@@ -33,9 +34,23 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundLayer;
 
-    [Header("Graphics")]
+    [Header("-------------------- Graphics ------------------------")]
     [SerializeField] private Transform graphics;
-    
+    [SerializeField] private Transform bodyGraphics;
+    [Space]
+    [SerializeField] private Vector3 bodySquashScale;
+    [SerializeField] private float bodySquashTime;
+    [Space]
+    [SerializeField] private Vector3 bodyJumpScale;
+    [SerializeField] private float bodyJumpTime;
+
+    [Header("-------------------- Camera ------------------------")] 
+    [SerializeField] private float landCameraShakeIntensity;
+    [SerializeField] private float landCameraShakeTime;
+    [Space]
+    [SerializeField] private float jumpCameraShakeIntensity;
+    [SerializeField] private float jumpCameraShakeTime;
+
     private bool _isJumping;
     private float _jumpCounter;
     private float _coyoteCounter;
@@ -53,6 +68,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 _move;
     private Vector2 _baseGravity;
     private Vector2 _vecGravity;
+    
+    private Vector3 _originalBodyScale;
+    private CameraScript _cameraScript;
 
     private bool passOne; //utilisé pour ne faire qu'une fois les anims d'attérissages
 
@@ -69,6 +87,8 @@ public class PlayerController : MonoBehaviour
         _baseGravity = Physics2D.gravity;
         _trailRenderer = transform.GetComponentInChildren<TrailRenderer>();
         _trailNormalValue = _trailRenderer.time;
+        _originalBodyScale = bodyGraphics.localScale;
+        _cameraScript = GameObject.FindGameObjectWithTag("Camera").GetComponent<CameraScript>();
         
         _charaDeath += Death;
     }
@@ -137,8 +157,18 @@ public class PlayerController : MonoBehaviour
             else
             {
                 //Jump
+                
                 if(_coyoteCounter>0 && _jumpBufferCounter>0)
                 {
+                    _cameraScript.CameraShake(jumpCameraShakeIntensity, jumpCameraShakeTime);
+                    bodyGraphics.DOScale(bodyJumpScale, bodyJumpTime)
+                        .SetEase(Ease.InOutSine)
+                        .OnComplete(() =>
+                        {
+                            bodyGraphics.DOScale(_originalBodyScale, bodyJumpTime)
+                                .SetEase(Ease.OutBounce);
+                        });
+                    
                     _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
                     _isJumping = true;
                     
@@ -238,7 +268,14 @@ public class PlayerController : MonoBehaviour
             if(passOne)
             {
                 passOne = false;
-                //DoTween Squash here glhf
+                _cameraScript.CameraShake(landCameraShakeIntensity, landCameraShakeTime);
+                bodyGraphics.DOScale(bodySquashScale, bodySquashTime)
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(() =>
+                    {
+                        bodyGraphics.DOScale(_originalBodyScale, bodySquashTime)
+                            .SetEase(Ease.OutBounce);
+                    });
             }
         }
         else
