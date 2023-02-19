@@ -153,6 +153,14 @@ public class PlayerController : MonoBehaviour
                 _rb.velocity = dashDir * dashForce * t;
                 _hasDashed = true;
                 _dashCounter = 0;
+                
+                bodyGraphics.DOScale(bodyJumpScale, bodyJumpTime)
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(() =>
+                    {
+                        bodyGraphics.DOScale(_originalBodyScale, bodyJumpTime)
+                            .SetEase(Ease.OutBounce);
+                    });
             }
             else
             {
