@@ -299,6 +299,12 @@ public class PlayerController : MonoBehaviour
         {
             _charaDeath();
         }
+
+        if (other.CompareTag("Finish"))
+        {
+            Debug.Log("C'est gagné");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
 
     private void Death()
