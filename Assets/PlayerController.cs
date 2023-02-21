@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 bodyJumpScale;
     [SerializeField] private float bodyJumpTime;
 
+    [SerializeField] private ParticleSystem runParticle;
+    [SerializeField] private ParticleSystem landParticle;
+
     [Header("-------------------- Camera ------------------------")] 
     [SerializeField] private float landCameraShakeIntensity;
     [SerializeField] private float landCameraShakeTime;
@@ -99,10 +102,12 @@ public class PlayerController : MonoBehaviour
         if(IsGrounded())
         {
             _coyoteCounter = coyoteTime;
+            if (!runParticle.isPlaying) runParticle.Play();
         }
         else
         {
             _coyoteCounter -= Time.deltaTime;
+            runParticle.Stop();
         }
 
         _jumpBufferCounter -= Time.deltaTime;
@@ -276,6 +281,7 @@ public class PlayerController : MonoBehaviour
             if(passOne)
             {
                 passOne = false;
+                landParticle.Play();
                 _cameraScript.CameraShake(landCameraShakeIntensity, landCameraShakeTime);
                 bodyGraphics.DOScale(bodySquashScale, bodySquashTime)
                     .SetEase(Ease.InOutSine)
@@ -304,6 +310,21 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("C'est gagné");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+
+        if (other.CompareTag("Enemy"))
+        {
+            if (_isDashing)
+            {
+                other.GetComponent<SpriteRenderer>().DOFade(0f, 0.1f).OnComplete((() =>
+                {
+                    other.GetComponent<SpriteRenderer>().DOFade(1f, 1f).SetEase(Ease.InOutCubic);
+                }));
+            }
+            else
+            {
+                _charaDeath();
+            }
         }
     }
 
