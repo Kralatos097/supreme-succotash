@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TheEnd : MonoBehaviour
@@ -14,6 +11,7 @@ public class TheEnd : MonoBehaviour
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_WEBPLAYER
+            PlayerPrefs.Save();
             Application.OpenURL(webplayerQuitURL);
 #else
             Application.Quit();

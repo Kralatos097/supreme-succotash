@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,10 +35,10 @@ public class ThirdPart : MonoBehaviour
         {
             Debug.Log("Active la partie 3");
             PlayerPrefs.SetInt("ThirdPart", 1);
-            PlayerPrefs.Save();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_WEBPLAYER
+            PlayerPrefs.Save();
             Application.OpenURL(webplayerQuitURL);
 #else
             Application.Quit();
