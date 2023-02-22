@@ -9077,7 +9077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c6e6574a16b6945a32426e23d63bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ResetPlayerPref: 1
+  ResetPlayerPref: 0
   MainMenu: 1
   ToActivate:
   - {fileID: 2143603509}

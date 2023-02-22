@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class TheEnd : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("End");
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_WEBPLAYER
-            PlayerPrefs.Save();
             Application.OpenURL(webplayerQuitURL);
 #else
             Application.Quit();
