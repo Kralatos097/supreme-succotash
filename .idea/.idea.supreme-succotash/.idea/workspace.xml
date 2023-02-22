@@ -13,6 +13,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ThirdPart.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/Assets/CameraScript.cs" />
@@ -90,7 +93,7 @@
       <workItem from="1676975995443" duration="5358000" />
       <workItem from="1677059339648" duration="683000" />
       <workItem from="1677060105897" duration="1134000" />
-      <workItem from="1677061643311" duration="2666000" />
+      <workItem from="1677061643311" duration="4132000" />
     </task>
     <servers />
   </component>

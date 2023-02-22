@@ -9,22 +9,31 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 5f03734f1e1bf124792875bef8d5c261
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
+    path: Assets/Scenes/Part1/Level1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Level2.unity
+    path: Assets/Scenes/Part1/Level2.unity
     guid: d71c38dc8f3daf04e83fda6a07ccbd4c
   - enabled: 1
-    path: Assets/Scenes/Level3.unity
+    path: Assets/Scenes/Part1/Level3.unity
     guid: 6c8b917cf6da81d4e984aa6646923faa
   - enabled: 1
-    path: Assets/Scenes/BreakTime.unity
+    path: Assets/Scenes/Part1/BreakTime.unity
     guid: 12f182d1d1e18a243947a7929c7b8b76
   - enabled: 1
-    path: Assets/Scenes/Level4.unity
+    path: Assets/Scenes/Part2/Level4.unity
     guid: ed771a8bcb0e5e449bb6f520074818b8
   - enabled: 1
-    path: Assets/Scenes/Level5.unity
+    path: Assets/Scenes/Part2/Level5.unity
     guid: f625597631616be489868548500a423d
+  - enabled: 1
+    path: Assets/Scenes/Part2/Level6.unity
+    guid: cb859a09b67c29b4d94fc19fa901122c
+  - enabled: 1
+    path: Assets/Scenes/Part2/Level7.unity
+    guid: 9bf4be7a9278f0c46ba97d9393948b30
+  - enabled: 1
+    path: Assets/Scenes/Part2/Level8.unity
+    guid: 9c4da594aeaad494a86d78c091199892
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 071f299e967061241bfbecdb11f0138b, type: 2}
