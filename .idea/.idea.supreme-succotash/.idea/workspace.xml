@@ -14,6 +14,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UnFreezeOnCollid.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TheEnd.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ThirdPart.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/LoadSceneOnTrigger.cs" root0="FORCE_HIGHLIGHTING" />
@@ -97,6 +98,7 @@
       <workItem from="1677060105897" duration="1134000" />
       <workItem from="1677061643311" duration="8095000" />
       <workItem from="1677092524368" duration="1996000" />
+      <workItem from="1677171956432" duration="3323000" />
     </task>
     <servers />
   </component>

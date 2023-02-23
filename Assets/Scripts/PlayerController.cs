@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour
 
     public delegate void PlayerDel();
     private PlayerDel _charaDeath;
-        
 
     // Start is called before the first frame update
     void Start()
@@ -168,6 +167,8 @@ public class PlayerController : MonoBehaviour
                 
                 if(_coyoteCounter>0 && _jumpBufferCounter>0)
                 {
+                    FindObjectOfType<AudioManager>().RandomPitch("Jump");
+
                     _cameraScript.CameraShake(jumpCameraShakeIntensity, jumpCameraShakeTime);
                     bodyGraphics.DOScale(bodyJumpScale, bodyJumpTime)
                         .SetEase(Ease.InOutSine)
@@ -250,6 +251,7 @@ public class PlayerController : MonoBehaviour
         _dashButtonState= !_dashButtonState;
         if(_dashButtonState)
         {
+            FindObjectOfType<AudioManager>().RandomPitch("Charge");
             _isDashCharging = true;
             _dashCounter = 0;
         }
@@ -258,6 +260,7 @@ public class PlayerController : MonoBehaviour
             _isDashCharging = false;
             dashChargeParticle.SetActive(false);
             dashDirArrow.SetActive(false);
+            FindObjectOfType<AudioManager>().RandomPitch("Dash");
         }
     }
 
@@ -277,6 +280,7 @@ public class PlayerController : MonoBehaviour
             {
                 passOne = false;
                 landParticle.Play();
+                FindObjectOfType<AudioManager>().RandomPitch("Ground");
                 _cameraScript.CameraShake(landCameraShakeIntensity, landCameraShakeTime);
                 bodyGraphics.DOScale(bodySquashScale, bodySquashTime)
                     .SetEase(Ease.InOutSine)
@@ -303,6 +307,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Finish"))
         {
+            FindObjectOfType<AudioManager>().RandomPitch("Jump");
             Debug.Log("C'est gagné");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
@@ -325,6 +330,7 @@ public class PlayerController : MonoBehaviour
 
     private void Death()
     {
+        FindObjectOfType<AudioManager>().RandomPitch("Ded");
         Debug.Log("Ah il est oh sol!");
         ReloadScene();
     }

@@ -29,6 +29,10 @@ public class ThirdPart : MonoBehaviour
         }
     }
 
+    public void Screamer()
+    {
+        FindObjectOfType<AudioManager>().OneShot("Scream");
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
